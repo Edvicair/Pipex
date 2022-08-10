@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edvicair <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 10:51:50 by edvicair          #+#    #+#             */
-/*   Updated: 2022/07/14 11:53:42 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/06 06:18:56 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	free_double(char **str)
 	free(str);
 }
 
-
 static void	first_child(t_pipe *pipe, char **av, char **env)
 {
 	pipe->child1 = fork();
@@ -41,8 +40,8 @@ static void	first_child(t_pipe *pipe, char **av, char **env)
 		dup2(pipe->in, STDIN_FILENO);
 		dup2(pipe->fd[1], STDOUT_FILENO);
 		close(pipe->fd[1]);
-			pipe->cmd1 = ft_split(av[2], ' ');
-			exec(pipe, pipe->cmd1, env);
+		pipe->cmd1 = ft_split(av[2], ' ');
+		exec(pipe, pipe->cmd1, env);
 	}
 }
 
