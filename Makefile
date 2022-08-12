@@ -3,14 +3,15 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: edvicair <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/07 21:54:40 by edvicair          #+#    #+#              #
-#    Updated: 2022/07/28 02:40:16 by edvicair         ###   ########.fr        #
+#    Updated: 2022/08/12 02:38:57 by edvicair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
+NAME_BONUS = pipex_bonus
 CCFLAGS = -Wall -Wextra -Werror
 SRC = main.c split.c lib.c get_env.c execve.c
 SRC_BONUS = bonus/main.c bonus/lib.c bonus/split.c bonus/get_env.c bonus/execve.c \
@@ -32,10 +33,13 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f $(NAME_BONUS)
 
 bonus: $(OBJ_BONUS)
-	gcc -o $(NAME) $(OBJ_BONUS)
+	gcc -o $(NAME_BONUS) $(OBJ_BONUS) -g
 
 re: fclean all
 
-.PHONY: clean fclean all%  
+re_bonus: fclean bonus
+
+.PHONY: clean fclean all re bonus re_bonus%

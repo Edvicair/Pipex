@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edvicair <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:49:41 by edvicair          #+#    #+#             */
-/*   Updated: 2022/06/30 14:06:17 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/12 03:25:51 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ char	**get_env(char **env)
 	sub = NULL;
 	if (!env)
 		return (NULL);
-	while (env[i] != NULL && (ft_strncmp("PATH", env[i], 4) != 0))
+	while (env[i] && (ft_strncmp("PATH", env[i], 4)))
 		i++;
-	if (ft_strncmp("PATH", env[i], 4) == 0)
+	if (!ft_strncmp("PATH", env[i], 4))
 	{
 		len = ft_strlen(env[i]);
 		sub = ft_substr(env[i], 5, len);

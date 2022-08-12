@@ -6,7 +6,7 @@
 /*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 10:51:50 by edvicair          #+#    #+#             */
-/*   Updated: 2022/08/06 06:18:56 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/11 21:26:08 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	second_child(t_pipe *pipe, char **av, char **env)
 	}
 	if (pipe->child2 == 0 && pipe->in != -1)
 	{
-		pipe->out = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		pipe->out = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
 		if (pipe->out == -1)
 		{
 			perror("Can't create <file2>");

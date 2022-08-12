@@ -6,7 +6,7 @@
 /*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 10:51:50 by edvicair          #+#    #+#             */
-/*   Updated: 2022/08/10 20:09:00 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/12 05:02:39 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,40 +27,39 @@ void	free_double(char **str)
 
 static void	first_child(t_pipe *pipe, char **av, char **env)
 {
-	//printf("FIIIIIIIIIIIIIIIRST\n");
-	pipe->child1 = fork();
-	if (pipe->child1 == -1)
+	pipe->f_child = fork();
+	if (pipe->f_child == -1)
 	{
 		perror("Can't fork");
 		free_double(pipe->path);
 		exit(0);
 	}
-	if (pipe->child1 == 0)
+	if (pipe->f_child == 0)
 	{
-		close(pipe->fd[0][0]);
 		dup2(pipe->in, STDIN_FILENO);
 		dup2(pipe->fd[0][1], STDOUT_FILENO);
+		close(pipe->fd[0][0]);
 		close(pipe->fd[0][1]);
-		pipe->cmd1 = ft_split(av[pipe->here_doc - 1], ' ');
-		fprintf(stderr, "CMD1=%s\n", pipe->cmd1[0]);
-		exec(pipe, pipe->cmd1, env);
+		pipe->cmd = ft_split(av[pipe->here_doc - 1], ' ');
+		exec(pipe, pipe->cmd, env);
+		free_double(pipe->cmd);
 	}
+	close(pipe->fd[0][1]);
 }
 
 static void	last_child(t_pipe *pipe, char **av, char **env, int ac, int i)
 {
-//	printf("LAAAAAAAAAAAAST\n");
-	pipe->child2 = fork();
-	if (pipe->child2 == -1)
+	pipe->l_child = fork();
+	if (pipe->l_child == -1)
 	{
 		perror("Can't fork");
 		free_double(pipe->path);
+		free_pipe(pipe->fd, pipe);
 		exit(0);
 	}
-	if (pipe->child2 == 0 && pipe->in != -1)
+	if (pipe->l_child == 0 && pipe->in != -1)
 	{
-	//	fprintf(stderr, "			%d\n", ac);
-		pipe->out = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+		pipe->out = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0666);
 		if (pipe->out == -1)
 		{
 			perror("Can't create <file2>");
@@ -71,17 +70,17 @@ static void	last_child(t_pipe *pipe, char **av, char **env, int ac, int i)
 		dup2(pipe->fd[i - 1][0], STDIN_FILENO);
 		close(pipe->fd[i][1]);
 		close(pipe->fd[i][0]);
-		pipe->cmd2 = ft_split(av[ac - 2], ' ');
-		fprintf(stderr, "CMD2=%s\n", pipe->cmd2[0]);
-		exec(pipe, pipe->cmd2, env);
+		close(pipe->fd[i - 1][0]);
+		pipe->cmd = ft_split(av[ac - 2], ' ');
+		exec(pipe, pipe->cmd, env);
+		free_double(pipe->cmd);
 	}
-	else 
-		wait(NULL);
+	close(pipe->fd[i][1]);
 }
 
 static int	check(int ac, t_pipe *pip, char **env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (ac < 5)
@@ -93,15 +92,9 @@ static int	check(int ac, t_pipe *pip, char **env)
 	}
 	pip->path = get_env(env);
 	if (pipe(pip->fdd) == -1)
-	{
-		perror("Can't pipe");
-		return (-1);
-	}
-	if (pip->path == NULL)
-	{
-		perror("Can't get environment variable");
-		return (-1);
-	}
+		return (perror("Can't pipe"), -1);
+	else if (!pip->path)
+		return (perror("Can't get environment variable"), -1);
 	return (0);
 }
 
@@ -109,7 +102,7 @@ int	main(int ac, char **av, char **env)
 {
 	t_pipe	pipe;
 	char	*buff;
-	int	i;
+	int		i;
 
 	pipe.here_doc = 3;
 	if (!*env)
@@ -125,7 +118,6 @@ int	main(int ac, char **av, char **env)
 		return (0);
 	if ((ft_strncmp(av[1], "here_doc", 8)) == 0)
 	{
-		// pipe.out = open(av[ac - 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
 		if (pipe.out == -1)
 			perror("Can't open <file1>");
 		pipe.in = here_doc(&pipe, av[2], ac);
@@ -137,27 +129,11 @@ int	main(int ac, char **av, char **env)
 			perror("Can't open <file1>");
 	}
 	first_child(&pipe, av, env);
-	buff = get_next_line(pipe.fd[0][0]);
-	printf("BUFF= %s\n", buff);
 	i = middle_child(&pipe, av, env);
-	buff = get_next_line(pipe.fd[1][0]);
-	printf("	BUFF= %s\n", buff);
-	printf("i = %d\n", i);
 	last_child(&pipe, av, env, ac, i);
-	// buff = get_next_line(pipe.fd[2][0]);
-	// printf("		BUFF= %s\n", buff);
-//	last_child();
+	free_double(pipe.path);
+	free_pipe(pipe.fd, &pipe);
+	waitpid(pipe.f_child, NULL, 0);
+	waitpid(pipe.m_child, NULL, 0);
+	waitpid(pipe.l_child, NULL, 0);
 }
-	// else if (ac == 5)
-	// {
-	// 	pipe.in = open(av[1], O_RDONLY);
-	// 	if (pipe.in == -1)
-	// 		perror("Can't open <file1>");
-	// 	else
-	// 	{
-	// 		first_child(&pipe, av, env);
-	// 		second_child(&pipe, av, env);
-	// 	}
-	// 	free_double(pipe.path);
-	// }
-//}
