@@ -6,7 +6,7 @@
 /*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 12:23:05 by edvicair          #+#    #+#             */
-/*   Updated: 2022/08/15 16:49:47 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/15 17:32:42 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	exec(t_pipe *pipe, char **cmd, char **env)
 		write(2, "Can't find command\n", 19);
 		free_double(pipe->path);
 		free_pipe(pipe->fd, pipe);
+		free_double(cmd);
 		exit(0);
 	}
 	else if (execve(paths, cmd, env) == -1)
