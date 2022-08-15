@@ -6,7 +6,7 @@
 #    By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/07 21:54:40 by edvicair          #+#    #+#              #
-#    Updated: 2022/08/12 02:38:57 by edvicair         ###   ########.fr        #
+#    Updated: 2022/08/15 16:01:40 by edvicair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ NAME_BONUS = pipex_bonus
 CCFLAGS = -Wall -Wextra -Werror
 SRC = main.c split.c lib.c get_env.c execve.c
 SRC_BONUS = bonus/main.c bonus/lib.c bonus/split.c bonus/get_env.c bonus/execve.c \
-bonus/here_doc.c bonus/get_next_line.c bonus/get_next_line_utils.c
+bonus/here_doc.c bonus/get_next_line.c bonus/get_next_line_utils.c bonus/pipex.c \
+bonus/free.c
 OBJ=$(SRC:%.c=%.o)
 OBJ_BONUS=$(SRC_BONUS:%.c=%.o)
 

@@ -6,24 +6,24 @@
 /*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 02:27:10 by edvicair          #+#    #+#             */
-/*   Updated: 2022/08/12 03:22:55 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/15 17:06:18 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	free_pipe(int **str, t_pipe *pipe)
-{
-	int	i;
+// void	free_pipe(int **str, t_pipe *pipe)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < pipe->count_cmd)
-	{
-		free(str[i]);
-		i++;
-	}
-	free(str);
-}
+// 	i = 0;
+// 	while (i < pipe->count_cmd)
+// 	{
+// 		free(str[i]);
+// 		i++;
+// 	}
+// 	free(str);
+// }
 
 int	create_pipe(t_pipe *pip, int ac)
 {
@@ -65,28 +65,27 @@ int	here_doc(t_pipe *pipe, char *limiter, int ac)
 		write(pipe->fdd[1], line, ft_strlen(line));
 		free(line);
 	}
+	close(pipe->fdd[1]);
 	return (pipe->fdd[0]);
 }
 
-int	middle_child(t_pipe *pipe, char **av, char **env)
+void	middle_child(t_pipe *pipe, char **av, char **env)
 {
-	int	i;
 	int	j;
 
-	i = 1;
+	pipe->i = 1;
 	j = pipe->here_doc;
-	while (i <= pipe->count_cmd - 2)
+	while (pipe->i <= pipe->count_cmd - 2)
 	{
 		pipe->cmd = ft_split(av[j], ' ');
-		exec_middle(pipe, pipe->fd[i], i, pipe->cmd, env);
+		exec_middle(pipe, pipe->fd[pipe->i], pipe->cmd, env);
 		free_double(pipe->cmd);
-		i++;
+		pipe->i++;
 		j++;
 	}
-	return (i);
 }
 
-void	exec_middle(t_pipe *pipe, int *fd, int i, char **cmd, char **env)
+void	exec_middle(t_pipe *pipe, int *fd, char **cmd, char **env)
 {
 	pipe->m_child = fork();
 	if (pipe->m_child == -1)
@@ -97,10 +96,11 @@ void	exec_middle(t_pipe *pipe, int *fd, int i, char **cmd, char **env)
 	}
 	if (pipe->m_child == 0)
 	{
-		dup2(pipe->fd[i - 1][0], STDIN_FILENO);
-		dup2(pipe->fd[i][1], STDOUT_FILENO);
-		close(pipe->fd[i][0]);
+		dup2(pipe->fd[pipe->i - 1][0], STDIN_FILENO);
+		dup2(pipe->fd[pipe->i][1], STDOUT_FILENO);
+		close(pipe->fd[pipe->i][0]);
 		exec(pipe, cmd, env);
+		free_double(pipe->cmd);
 	}
-	close(pipe->fd[i][1]);
+	close(pipe->fd[pipe->i][1]);
 }
