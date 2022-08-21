@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edvicair <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 20:26:08 by edvicair          #+#    #+#             */
-/*   Updated: 2021/09/14 22:11:20 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/15 19:13:04 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,17 @@ int	ft_read(int *ret, int fd, char **buff)
 	return (*ret);
 }
 
-char	*get_next_line(int fd)
+static int	check_reset(int reset, char *str)
+{
+	if (reset == 1)
+	{
+		free(str);
+		return (1);
+	}
+	return (0);
+}
+
+char	*get_next_line(int fd, int reset)
 {
 	char		*buff;
 	static char	*str;
@@ -76,6 +86,8 @@ char	*get_next_line(int fd)
 
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (check_reset(reset, str) == 1)
 		return (NULL);
 	buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buff)

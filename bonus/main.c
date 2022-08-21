@@ -6,7 +6,7 @@
 /*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 10:51:50 by edvicair          #+#    #+#             */
-/*   Updated: 2022/08/15 16:02:48 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/21 13:24:12 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 static int	check(int ac, t_pipe *pip, char **env)
 {
-	int	i;
-
-	i = 0;
 	if (ac < 5)
 	{
 		write(1, "Error arg :\n", 12);
@@ -35,8 +32,6 @@ static int	check(int ac, t_pipe *pip, char **env)
 int	main(int ac, char **av, char **env)
 {
 	t_pipe	pipe;
-	char	*buff;
-	int		i;
 
 	pipe.here_doc = 3;
 	if (!*env)
@@ -51,8 +46,7 @@ int	main(int ac, char **av, char **env)
 	if (create_pipe(&pipe, ac) < 0)
 		return (0);
 	pipex(&pipe, av, ac, env);
-	free_double(pipe.path);
-	free_pipe(pipe.fd, &pipe);
+	free_all(&pipe);
 	waitpid(pipe.f_child, NULL, 0);
 	waitpid(pipe.m_child, NULL, 0);
 	waitpid(pipe.l_child, NULL, 0);

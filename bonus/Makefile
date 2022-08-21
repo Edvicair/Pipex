@@ -6,39 +6,33 @@
 #    By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/07 21:54:40 by edvicair          #+#    #+#              #
-#    Updated: 2022/08/21 13:28:34 by edvicair         ###   ########.fr        #
+#    Updated: 2022/08/15 20:22:05 by edvicair         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = pipex
 NAME_BONUS = pipex_bonus
 CCFLAGS = -Wall -Wextra -Werror
-SRC = main.c split.c lib.c get_env.c execve.c
-SRC_BONUS = bonus/main.c bonus/lib.c bonus/split.c bonus/get_env.c bonus/execve.c \
-bonus/here_doc.c bonus/get_next_line.c bonus/get_next_line_utils.c bonus/pipex.c \
-bonus/free.c
-OBJ=$(SRC:%.c=%.o)
+SRC_BONUS = main.c lib.c split.c get_env.c execve.c \
+here_doc.c get_next_line.c get_next_line_utils.c pipex.c \
+free.c
 OBJ_BONUS=$(SRC_BONUS:%.c=%.o)
 
-all: $(NAME)
-
-$(NAME): $(OBJ) 
-	gcc -o $(NAME) $(OBJ)
+all: $(NAME_BONUS)
 
 .c.o:
 	gcc $(CCFLAGS) -c $< -o ${<:.c=.o}
 
 clean:
-	rm -f $(OBJ)
-	make -s -C bonus clean
+	rm -f $(OBJ_BONUS) 
+
+$(NAME_BONUS): $(OBJ_BONUS) 
+	gcc -o $(NAME_BONUS) $(OBJ_BONUS)
 
 fclean: clean
-	rm -f $(NAME)
 	rm -f $(NAME_BONUS)
-	make -s -C bonus fclean
 
-bonus:
-	make -C  bonus && cd bonus && cp pipex_bonus ..
+bonus: $(OBJ_BONUS)
+	gcc -o $(NAME_BONUS) $(OBJ_BONUS) -g
 
 re: fclean all
 

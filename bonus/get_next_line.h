@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: edvicair <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/14 20:31:51 by edvicair          #+#    #+#             */
-/*   Updated: 2021/09/14 22:11:22 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/15 19:05:15 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #  define BUFFER_SIZE 1
 # endif
 
-char	*get_next_line(int fd);
+char	*get_next_line(int fd, int reset);
 int		ft_check(const char *str);
 char	*ft_strjoin_gnl(char *s1, const char *s2);
 char	*ft_strdup(const char *s);

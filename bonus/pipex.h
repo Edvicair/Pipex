@@ -6,7 +6,7 @@
 /*   By: edvicair <edvicair@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 11:39:59 by edvicair          #+#    #+#             */
-/*   Updated: 2022/08/15 16:01:18 by edvicair         ###   ########.fr       */
+/*   Updated: 2022/08/21 13:21:56 by edvicair         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	**ft_split(char const *s, char c);
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 void	exec(t_pipe *pipe, char **cmd, char **env);
-void	exec_middle(t_pipe *pipe, int *fd, char **cmd, char **env);
+void	exec_middle(t_pipe *pipe, char **cmd, char **env);
 void	middle_child(t_pipe *pipe, char **av, char **env);
 void	pipex(t_pipe *pipe, char **av, int ac, char **env);
 int		create_pipe(t_pipe *pip, int ac);
